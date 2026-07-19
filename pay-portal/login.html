@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login — Pay TechDream Africa</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = { darkMode: 'class', theme: { extend: {
+    colors: { primary: { DEFAULT:'#0F766E',600:'#0F766E',700:'#0B5C56' }, secondary:'#1E293B', accent:'#2563EB' },
+    fontFamily: { display: ['Sora','sans-serif'], body: ['Inter','sans-serif'] },
+  }}};
+</script>
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body class="font-body bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-200 min-h-screen">
+
+<div class="min-h-screen flex items-center justify-center px-5 py-12">
+  <div class="w-full max-w-md animate-fade-in-up">
+    <a href="index.html" class="flex items-center justify-center gap-2 font-display font-bold text-lg text-secondary dark:text-white mb-8">
+      <span class="h-8 w-8 rounded-lg bg-primary-600 flex items-center justify-center text-white text-sm">TD</span>
+      Pay<span class="text-primary-600">.TechDreamAfrica</span>
+    </a>
+
+    <div class="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm p-8">
+      <h1 class="font-display font-bold text-2xl text-secondary dark:text-white">Welcome back</h1>
+      <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">Sign in to view invoices and payment history.</p>
+
+      <form id="login-form" class="mt-6 space-y-4">
+        <div>
+          <label class="text-sm font-medium text-slate-600 dark:text-slate-300">Email address</label>
+          <input required type="email" name="email" placeholder="you@company.com"
+                 class="mt-1 w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 px-4 py-2.5 text-sm focus:ring-2 focus:ring-primary-600 outline-none">
+        </div>
+        <div>
+          <div class="flex justify-between items-center">
+            <label class="text-sm font-medium text-slate-600 dark:text-slate-300">Password</label>
+            <a href="#" id="forgot-link" class="text-xs font-medium text-accent hover:underline">Forgot password?</a>
+          </div>
+          <input required type="password" name="password" placeholder="••••••••"
+                 class="mt-1 w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 px-4 py-2.5 text-sm focus:ring-2 focus:ring-primary-600 outline-none">
+        </div>
+        <label class="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-300">
+          <input type="checkbox" name="remember_me" checked class="rounded border-slate-300 text-primary-600 focus:ring-primary-600"> Remember me
+        </label>
+        <button type="submit" class="w-full rounded-lg bg-primary-600 text-white font-semibold py-3 hover:bg-primary-700 transition-colors">Sign In</button>
+      </form>
+
+      <form id="forgot-form" class="hidden mt-6 space-y-3 border-t border-slate-200 dark:border-slate-800 pt-5">
+        <p class="text-sm text-slate-500 dark:text-slate-400">Enter your email and we'll send you a reset link.</p>
+        <input required type="email" name="email" placeholder="you@company.com"
+               class="w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 px-4 py-2.5 text-sm focus:ring-2 focus:ring-primary-600 outline-none">
+        <button type="submit" class="w-full rounded-lg bg-accent text-white font-semibold py-2.5 hover:bg-blue-800 transition-colors">Send Reset Link</button>
+      </form>
+
+      <p class="text-sm text-center text-slate-500 dark:text-slate-400 mt-6">
+        Don't have an account? <a href="register.html" class="text-primary-600 font-medium hover:underline">Create one</a>
+      </p>
+      <p class="text-sm text-center text-slate-400 mt-2">
+        Just here to pay an invoice? <a href="pay.html" class="text-primary-600 font-medium hover:underline">No account needed →</a>
+      </p>
+    </div>
+  </div>
+</div>
+
+<script type="module">
+  import { wireLoginForm, requestPasswordReset } from './js/auth.js';
+  import { initTheme, toast } from './js/ui.js';
+  initTheme();
+  wireLoginForm(document.getElementById('login-form'));
+
+  const forgotLink = document.getElementById('forgot-link');
+  const loginForm = document.getElementById('login-form');
+  const forgotForm = document.getElementById('forgot-form');
+  forgotLink.addEventListener('click', (e) => { e.preventDefault(); loginForm.classList.toggle('hidden'); forgotForm.classList.toggle('hidden'); });
+
+  forgotForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const email = new FormData(forgotForm).get('email');
+    try { await requestPasswordReset(email); toast('Reset link sent — check your inbox.', 'success'); }
+    catch (err) { toast(err.message || 'Could not send reset link.', 'error'); }
+  });
+
+  if (new URLSearchParams(location.search).get('verified')) toast('Email verified — you can now sign in.', 'success');
+</script>
+</body>
+</html>

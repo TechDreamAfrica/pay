@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pay TechDream Africa — Secure Online Payments</title>
+<meta name="description" content="Pay invoices, project deposits, milestone payments, and subscriptions securely using Mobile Money or bank cards.">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = { darkMode: 'class', theme: { extend: {
+    colors: {
+      primary: { DEFAULT:'#0F766E', 50:'#EBF7F5', 100:'#D2EEE9', 600:'#0F766E', 700:'#0B5C56', 800:'#083F3B' },
+      secondary: '#1E293B', accent: '#2563EB',
+      success:'#10B981', warning:'#F59E0B', danger:'#EF4444',
+    },
+    fontFamily: { display: ['Sora','sans-serif'], body: ['Inter','sans-serif'] },
+  }}};
+</script>
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body class="font-body bg-white dark:bg-slate-950 text-slate-800 dark:text-slate-200 antialiased">
+
+<!-- ============================== ANNOUNCEMENT BAR ============================== -->
+<div class="announcement-bar text-white text-xs sm:text-sm">
+  <div class="max-w-7xl mx-auto px-5 lg:px-8 h-10 flex items-center justify-center gap-2 text-center">
+    <span>🔒 Payments secured by Hubtel — trusted by TechDream Africa clients across Ghana.</span>
+  </div>
+</div>
+
+<!-- ============================== NAVBAR ============================== -->
+<header class="sticky top-0 z-50 bg-white/95 dark:bg-slate-950/95 border-b border-slate-100 dark:border-slate-800 backdrop-blur">
+  <nav class="max-w-7xl mx-auto px-5 lg:px-8 h-16 flex items-center justify-between">
+    <a href="index.html" class="flex items-center gap-2 font-display font-bold text-lg text-secondary dark:text-white">
+      <span class="h-8 w-8 rounded-lg bg-primary-600 flex items-center justify-center text-white text-sm">TD</span>
+      Pay<span class="text-primary-600">.TechDreamAfrica</span>
+    </a>
+    <div class="hidden md:flex items-center gap-8 text-sm font-medium">
+      <a href="pay.html" class="hover:text-primary-600 transition-colors">Pay Now</a>
+      <a href="invoice.html" class="hover:text-primary-600 transition-colors">View Invoice</a>
+      <a href="index.html#faq" class="hover:text-primary-600 transition-colors">FAQ</a>
+      <a href="index.html#contact" class="hover:text-primary-600 transition-colors">Contact</a>
+    </div>
+    <div class="flex items-center gap-3">
+      <button id="theme-toggle" aria-label="Toggle dark mode" class="h-9 w-9 rounded-full border border-slate-200 dark:border-slate-700 flex items-center justify-center hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors">🌓</button>
+      <a href="login.html" class="hidden sm:inline-block text-sm font-medium px-4 py-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">Login</a>
+      <a href="pay.html" class="text-sm font-medium px-4 py-2 rounded-lg bg-primary-600 text-white hover:bg-primary-700 transition-colors">Pay Now</a>
+    </div>
+  </nav>
+</header>
+
+<!-- ============================== HERO ============================== -->
+<section class="hero-photo" style="background-image:url('https://images.unsplash.com/photo-1622637701835-5fbc31351877?auto=format&fit=crop&w=1600&q=70'); background-size:cover; background-position:center;">
+  <div class="max-w-7xl mx-auto px-5 lg:px-8 pt-20 pb-24 text-center">
+    <span class="inline-flex items-center gap-1.5 text-xs font-semibold text-white bg-primary-700 px-3 py-1.5 rounded-full">
+      <span class="h-1.5 w-1.5 rounded-full bg-white animate-pulse-dot"></span> Proudly Ghanaian — Based in Winneba, Agona Swedru & Accra
+    </span>
+    <h1 class="font-display font-extrabold text-4xl sm:text-5xl leading-[1.1] mt-6 text-white max-w-3xl mx-auto">
+      Secure Online Payments for TechDream Africa
+    </h1>
+    <p class="mt-5 text-lg text-slate-200 max-w-2xl mx-auto">
+      Pay invoices, project deposits, milestone payments, and subscriptions securely using Mobile Money or bank cards.
+    </p>
+    <div class="mt-8 flex flex-wrap justify-center gap-3">
+      <a href="pay.html" class="px-6 py-3 rounded-lg bg-primary-600 text-white font-semibold hover:bg-primary-700 transition-colors">Pay Now</a>
+      <a href="invoice.html" class="px-6 py-3 rounded-lg bg-white text-secondary font-semibold hover:bg-slate-100 transition-colors">View Invoice</a>
+      <a href="login.html" class="px-6 py-3 rounded-lg border border-white/40 text-white font-semibold hover:bg-white/10 transition-colors">Login</a>
+    </div>
+  </div>
+</section>
+
+<!-- ============================== TRUSTED BY / PAYMENT METHODS ============================== -->
+<section class="border-b border-slate-100 dark:border-slate-800 py-8">
+  <div class="max-w-7xl mx-auto px-5 lg:px-8">
+    <p class="text-center text-xs font-semibold uppercase tracking-wide text-slate-400 mb-5">Accepted payment methods</p>
+    <div class="flex flex-wrap justify-center gap-3">
+      <span class="badge-mtn px-4 py-2 rounded-lg text-sm font-semibold">MTN Mobile Money</span>
+      <span class="badge-telecel px-4 py-2 rounded-lg text-sm font-semibold">Telecel Cash</span>
+      <span class="badge-airteltigo px-4 py-2 rounded-lg text-sm font-semibold">AirtelTigo Money</span>
+      <span class="badge-visa px-4 py-2 rounded-lg text-sm font-semibold">Visa</span>
+      <span class="badge-mastercard px-4 py-2 rounded-lg text-sm font-semibold">Mastercard</span>
+    </div>
+  </div>
+</section>
+
+<!-- ============================== PAYMENT OPTIONS ============================== -->
+<section id="payment-options" class="max-w-7xl mx-auto px-5 lg:px-8 py-20">
+  <div class="text-center max-w-2xl mx-auto">
+    <p class="text-xs font-semibold uppercase tracking-wide text-primary-600">Get started</p>
+    <h2 class="font-display font-bold text-3xl text-secondary dark:text-white mt-2">Three ways to pay</h2>
+    <p class="mt-3 text-slate-600 dark:text-slate-400">Choose the option that matches what you're paying for.</p>
+  </div>
+  <div class="mt-12 grid md:grid-cols-3 gap-6">
+    <div class="rounded-xl border border-slate-200 dark:border-slate-800 p-6 hover:border-primary-600 transition-colors">
+      <div class="h-11 w-11 rounded-lg bg-primary-50 dark:bg-primary-800/30 flex items-center justify-center text-xl">🧾</div>
+      <h3 class="font-display font-semibold mt-4 text-secondary dark:text-white">Pay an Invoice</h3>
+      <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">Enter your invoice number and email to retrieve and pay a specific bill.</p>
+      <a href="pay.html#invoice" class="inline-block mt-4 text-sm font-semibold text-primary-600 hover:underline">Pay by invoice number →</a>
+    </div>
+    <div class="rounded-xl border border-slate-200 dark:border-slate-800 p-6 hover:border-primary-600 transition-colors">
+      <div class="h-11 w-11 rounded-lg bg-primary-50 dark:bg-primary-800/30 flex items-center justify-center text-xl">🏗️</div>
+      <h3 class="font-display font-semibold mt-4 text-secondary dark:text-white">Project Deposit</h3>
+      <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">Starting a new project? Pay your required deposit using your Project ID.</p>
+      <a href="pay.html#deposit" class="inline-block mt-4 text-sm font-semibold text-primary-600 hover:underline">Pay project deposit →</a>
+    </div>
+    <div class="rounded-xl border border-slate-200 dark:border-slate-800 p-6 hover:border-primary-600 transition-colors">
+      <div class="h-11 w-11 rounded-lg bg-primary-50 dark:bg-primary-800/30 flex items-center justify-center text-xl">✍️</div>
+      <h3 class="font-display font-semibold mt-4 text-secondary dark:text-white">Custom Payment</h3>
+      <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">Paying for something else — a subscription, a milestone? Enter the details yourself.</p>
+      <a href="pay.html#custom" class="inline-block mt-4 text-sm font-semibold text-primary-600 hover:underline">Make a custom payment →</a>
+    </div>
+  </div>
+</section>
+
+<!-- ============================== WHY SECURE ============================== -->
+<section class="bg-slate-50 dark:bg-slate-900/40 py-20">
+  <div class="max-w-7xl mx-auto px-5 lg:px-8">
+    <div class="text-center max-w-2xl mx-auto">
+      <p class="text-xs font-semibold uppercase tracking-wide text-primary-600">Why pay here</p>
+      <h2 class="font-display font-bold text-3xl text-secondary dark:text-white mt-2">Built for security, from the ground up</h2>
+    </div>
+    <div class="mt-12 grid md:grid-cols-3 gap-6">
+      <div class="rounded-xl bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 p-6">
+        <h3 class="font-display font-semibold text-secondary dark:text-white">Bank-Grade Encryption</h3>
+        <p class="text-sm text-slate-500 dark:text-slate-400 mt-2">Every transaction runs over HTTPS, and payment credentials never touch our servers directly — Hubtel handles the sensitive parts.</p>
+      </div>
+      <div class="rounded-xl bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 p-6">
+        <h3 class="font-display font-semibold text-secondary dark:text-white">Real-Time Confirmation</h3>
+        <p class="text-sm text-slate-500 dark:text-slate-400 mt-2">Watch your payment move from pending to confirmed, with a digital receipt generated the moment it settles.</p>
+      </div>
+      <div class="rounded-xl bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 p-6">
+        <h3 class="font-display font-semibold text-secondary dark:text-white">Full Transaction History</h3>
+        <p class="text-sm text-slate-500 dark:text-slate-400 mt-2">Every payment you make is logged to your dashboard, with downloadable receipts whenever you need them.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================== STATS ============================== -->
+<section class="max-w-7xl mx-auto px-5 lg:px-8 py-16 grid grid-cols-2 sm:grid-cols-4 gap-8 text-center">
+  <div><p class="font-display font-bold text-3xl text-secondary dark:text-white">120+</p><p class="text-sm text-slate-500 dark:text-slate-400 mt-1">Invoices settled</p></div>
+  <div><p class="font-display font-bold text-3xl text-secondary dark:text-white">GH₵2M+</p><p class="text-sm text-slate-500 dark:text-slate-400 mt-1">Processed securely</p></div>
+  <div><p class="font-display font-bold text-3xl text-secondary dark:text-white">99.9%</p><p class="text-sm text-slate-500 dark:text-slate-400 mt-1">Uptime SLA</p></div>
+  <div><p class="font-display font-bold text-3xl text-secondary dark:text-white">&lt;2min</p><p class="text-sm text-slate-500 dark:text-slate-400 mt-1">Average confirmation</p></div>
+</section>
+
+<!-- ============================== FAQ ============================== -->
+<section id="faq" class="max-w-3xl mx-auto px-5 lg:px-8 py-20">
+  <h2 class="font-display font-bold text-3xl text-secondary dark:text-white text-center">Frequently asked questions</h2>
+  <div class="mt-10 space-y-3">
+    <details class="group rounded-lg border border-slate-200 dark:border-slate-800 p-5" open>
+      <summary class="flex justify-between items-center cursor-pointer font-medium text-secondary dark:text-white list-none">Which payment methods do you accept? <span class="text-primary-600 group-open:rotate-45 transition-transform">+</span></summary>
+      <p class="mt-3 text-sm text-slate-500 dark:text-slate-400">MTN Mobile Money, Telecel Cash, AirtelTigo Money, Visa, and Mastercard — all processed securely through Hubtel.</p>
+    </details>
+    <details class="group rounded-lg border border-slate-200 dark:border-slate-800 p-5">
+      <summary class="flex justify-between items-center cursor-pointer font-medium text-secondary dark:text-white list-none">How do I know my payment went through? <span class="text-primary-600 group-open:rotate-45 transition-transform">+</span></summary>
+      <p class="mt-3 text-sm text-slate-500 dark:text-slate-400">You'll see a live status update on screen, receive an in-app and email notification, and get a downloadable receipt the moment your payment is confirmed by Hubtel.</p>
+    </details>
+    <details class="group rounded-lg border border-slate-200 dark:border-slate-800 p-5">
+      <summary class="flex justify-between items-center cursor-pointer font-medium text-secondary dark:text-white list-none">Do I need an account to pay an invoice? <span class="text-primary-600 group-open:rotate-45 transition-transform">+</span></summary>
+      <p class="mt-3 text-sm text-slate-500 dark:text-slate-400">No — you can pay by invoice number and email without registering. Creating an account just lets you track history and receipts in one place.</p>
+    </details>
+  </div>
+</section>
+
+<!-- ============================== CONTACT / CTA ============================== -->
+<section id="contact" class="bg-secondary py-16">
+  <div class="max-w-3xl mx-auto px-5 lg:px-8 text-center">
+    <h2 class="font-display font-bold text-3xl text-white">Need help with a payment?</h2>
+    <p class="text-slate-300 mt-2">Reach our finance team directly — we typically respond within one business day.</p>
+    <div class="mt-6 flex flex-wrap justify-center gap-3">
+      <a href="mailto:info@techdreamafrica.org" class="px-5 py-2.5 rounded-lg bg-primary-600 text-white font-semibold hover:bg-primary-700 transition-colors">Email Finance Team</a>
+      <a href="https://wa.me/233597458456" class="px-5 py-2.5 rounded-lg bg-white text-secondary font-semibold hover:bg-slate-100 transition-colors">WhatsApp Us</a>
+    </div>
+  </div>
+</section>
+
+<!-- ============================== FOOTER ============================== -->
+<footer class="bg-secondary text-slate-300 border-t border-white/10">
+  <div class="max-w-7xl mx-auto px-5 lg:px-8 py-12 grid sm:grid-cols-2 lg:grid-cols-4 gap-10">
+    <div>
+      <p class="font-display font-bold text-white text-lg">Pay.TechDreamAfrica</p>
+      <p class="text-sm mt-3 text-slate-400">Secure payments for TechDream Africa clients across Ghana.</p>
+    </div>
+    <div>
+      <p class="font-semibold text-white text-sm mb-3">Pay</p>
+      <ul class="space-y-2 text-sm text-slate-400">
+        <li><a href="pay.html#invoice" class="hover:text-white">Pay an Invoice</a></li>
+        <li><a href="pay.html#deposit" class="hover:text-white">Project Deposit</a></li>
+        <li><a href="pay.html#custom" class="hover:text-white">Custom Payment</a></li>
+      </ul>
+    </div>
+    <div>
+      <p class="font-semibold text-white text-sm mb-3">Account</p>
+      <ul class="space-y-2 text-sm text-slate-400">
+        <li><a href="login.html" class="hover:text-white">Login</a></li>
+        <li><a href="register.html" class="hover:text-white">Create Account</a></li>
+        <li><a href="dashboard.html" class="hover:text-white">Dashboard</a></li>
+      </ul>
+    </div>
+    <div>
+      <p class="font-semibold text-white text-sm mb-3">Contact</p>
+      <ul class="space-y-2 text-sm text-slate-400">
+        <li>Winneba • Agona Swedru • Accra, Ghana</li>
+        <li>info@techdreamafrica.org</li>
+        <li>0597 458 456</li>
+      </ul>
+    </div>
+  </div>
+  <div class="border-t border-white/10 py-5 text-center text-xs text-slate-500">© <span id="year"></span> Tech Dream Africa. All rights reserved.</div>
+</footer>
+
+<!-- WhatsApp floating button -->
+<a href="https://wa.me/233597458456" class="fixed bottom-5 right-5 z-40 h-12 w-12 rounded-full bg-emerald-600 text-white flex items-center justify-center shadow-lg hover:bg-emerald-700 transition-colors" aria-label="Chat on WhatsApp">💬</a>
+
+<script type="module">
+  import { initTheme, toggleTheme } from './js/ui.js';
+  initTheme();
+  document.getElementById('theme-toggle').addEventListener('click', toggleTheme);
+  document.getElementById('year').textContent = new Date().getFullYear();
+</script>
+</body>
+</html>

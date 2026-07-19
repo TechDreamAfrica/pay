@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Profile — Pay TechDream Africa</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = { darkMode: 'class', theme: { extend: {
+    colors: { primary: { DEFAULT:'#0F766E',50:'#EBF7F5',600:'#0F766E',700:'#0B5C56' }, secondary:'#1E293B', accent:'#2563EB' },
+    fontFamily: { display: ['Sora','sans-serif'], body: ['Inter','sans-serif'] },
+  }}};
+</script>
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body class="font-body bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-200">
+
+<header class="h-16 bg-white dark:bg-slate-950 border-b border-slate-100 dark:border-slate-800 flex items-center px-5 lg:px-8 sticky top-0 z-20">
+  <a href="dashboard.html" class="text-sm text-slate-500 hover:text-primary-600 flex items-center gap-1">← Dashboard</a>
+  <button id="theme-toggle" class="ml-auto h-9 w-9 rounded-full border border-slate-200 dark:border-slate-700 flex items-center justify-center">🌓</button>
+</header>
+
+<main class="max-w-2xl mx-auto px-5 py-10">
+  <h1 class="font-display font-bold text-2xl text-secondary dark:text-white">Your profile</h1>
+  <p class="text-slate-500 dark:text-slate-400 mt-1">Keep your contact details up to date.</p>
+
+  <div class="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm p-6 mt-6">
+    <div class="flex items-center gap-4">
+      <div id="avatar-circle" class="h-16 w-16 rounded-full bg-primary-600 text-white flex items-center justify-center text-xl font-semibold">–</div>
+      <div><p id="profile-role" class="text-xs font-medium text-primary-600 uppercase tracking-wide">—</p><p id="profile-email" class="text-sm text-slate-400">—</p></div>
+    </div>
+    <form id="profile-form" class="mt-6 space-y-4">
+      <div><label class="text-sm font-medium">Full name</label>
+        <input required name="fullname" class="mt-1 w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 px-4 py-2.5 text-sm focus:ring-2 focus:ring-primary-600 outline-none"></div>
+      <div><label class="text-sm font-medium">Mobile number</label>
+        <input name="phone" class="mt-1 w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 px-4 py-2.5 text-sm focus:ring-2 focus:ring-primary-600 outline-none"></div>
+      <button type="submit" class="rounded-lg bg-primary-600 text-white font-semibold px-6 py-2.5 hover:bg-primary-700 transition-colors">Save Changes</button>
+    </form>
+  </div>
+
+  <div class="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm p-6 mt-6">
+    <h2 class="font-display font-semibold text-secondary dark:text-white">Change password</h2>
+    <form id="password-form" class="mt-4 space-y-3">
+      <input required type="password" name="password" minlength="8" placeholder="New password" class="w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 px-4 py-2.5 text-sm focus:ring-2 focus:ring-primary-600 outline-none">
+      <button type="submit" class="rounded-lg border border-slate-300 dark:border-slate-700 font-semibold px-6 py-2.5 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors text-sm">Update Password</button>
+    </form>
+  </div>
+</main>
+
+<script type="module">
+  import { requireAuth, getCurrentProfile } from './js/supabase.js';
+  import { initTheme, toggleTheme, toast, initials } from './js/ui.js';
+  import { updateProfile, updatePassword } from './js/auth.js';
+  initTheme();
+  document.getElementById('theme-toggle').addEventListener('click', toggleTheme);
+
+  let profile;
+  (async () => {
+    const session = await requireAuth();
+    if (!session) return;
+    profile = await getCurrentProfile();
+    document.getElementById('avatar-circle').textContent = initials(profile.fullname);
+    document.getElementById('profile-role').textContent = profile.role.replace('_', ' ');
+    document.getElementById('profile-email').textContent = profile.email;
+    const form = document.getElementById('profile-form');
+    form.fullname.value = profile.fullname || '';
+    form.phone.value = profile.phone || '';
+  })();
+
+  document.getElementById('profile-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const fd = new FormData(e.target);
+    try { await updateProfile(profile.id, { fullname: fd.get('fullname'), phone: fd.get('phone') }); toast('Profile updated', 'success'); }
+    catch (err) { toast(err.message || 'Could not update profile.', 'error'); }
+  });
+
+  document.getElementById('password-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const fd = new FormData(e.target);
+    try { await updatePassword(fd.get('password')); toast('Password updated', 'success'); e.target.reset(); }
+    catch (err) { toast(err.message || 'Could not update password.', 'error'); }
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pay Now — Pay TechDream Africa</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = { darkMode: 'class', theme: { extend: {
+    colors: { primary: { DEFAULT:'#0F766E',50:'#EBF7F5',600:'#0F766E',700:'#0B5C56' }, secondary:'#1E293B', accent:'#2563EB' },
+    fontFamily: { display: ['Sora','sans-serif'], body: ['Inter','sans-serif'] },
+  }}};
+</script>
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body class="font-body bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-200">
+
+<header class="h-16 bg-white dark:bg-slate-950 border-b border-slate-100 dark:border-slate-800 flex items-center px-5 lg:px-8 sticky top-0 z-20">
+  <a href="index.html" class="flex items-center gap-2 font-display font-bold text-secondary dark:text-white">
+    <span class="h-8 w-8 rounded-lg bg-primary-600 flex items-center justify-center text-white text-sm">TD</span>
+    Pay<span class="text-primary-600">.TechDreamAfrica</span>
+  </a>
+  <button id="theme-toggle" class="ml-auto h-9 w-9 rounded-full border border-slate-200 dark:border-slate-700 flex items-center justify-center">🌓</button>
+</header>
+
+<main class="max-w-2xl mx-auto px-5 py-10">
+  <h1 class="font-display font-bold text-3xl text-secondary dark:text-white">Make a Payment</h1>
+  <p class="text-slate-500 dark:text-slate-400 mt-1">Choose how you'd like to pay.</p>
+
+  <!-- Option tabs -->
+  <div class="flex gap-1 mt-6 border-b border-slate-200 dark:border-slate-800" id="option-tabs">
+    <button data-option="invoice" class="option-tab px-4 py-2.5 text-sm font-medium border-b-2 border-primary-600 text-primary-600">Invoice Number</button>
+    <button data-option="deposit" class="option-tab px-4 py-2.5 text-sm font-medium border-b-2 border-transparent text-slate-500 hover:text-primary-600">Project Deposit</button>
+    <button data-option="custom" class="option-tab px-4 py-2.5 text-sm font-medium border-b-2 border-transparent text-slate-500 hover:text-primary-600">Custom Payment</button>
+  </div>
+
+  <!-- OPTION 1: Invoice lookup -->
+  <section id="panel-invoice" class="option-panel mt-6">
+    <form id="invoice-lookup-form" class="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-5 space-y-3">
+      <div><label class="text-sm font-medium">Invoice number</label>
+        <input required name="invoiceNumber" placeholder="e.g. TDA-INV-0123" class="mt-1 w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 px-4 py-2.5 text-sm focus:ring-2 focus:ring-primary-600 outline-none"></div>
+      <div><label class="text-sm font-medium">Email on the invoice</label>
+        <input required type="email" name="email" placeholder="you@company.com" class="mt-1 w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 px-4 py-2.5 text-sm focus:ring-2 focus:ring-primary-600 outline-none"></div>
+      <button type="submit" class="w-full rounded-lg bg-primary-600 text-white font-semibold py-2.5 hover:bg-primary-700 transition-colors">Look Up Invoice</button>
+    </form>
+    <div id="invoice-result" class="hidden mt-4 rounded-xl border border-primary-200 dark:border-primary-800 bg-primary-50 dark:bg-primary-900/20 p-5"></div>
+  </section>
+
+  <!-- OPTION 2: Project deposit -->
+  <section id="panel-deposit" class="option-panel hidden mt-6">
+    <form id="deposit-lookup-form" class="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-5 space-y-3">
+      <div><label class="text-sm font-medium">Project ID</label>
+        <input required name="projectId" placeholder="e.g. PRJ-2026-014" class="mt-1 w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 px-4 py-2.5 text-sm focus:ring-2 focus:ring-primary-600 outline-none"></div>
+      <div><label class="text-sm font-medium">Client email</label>
+        <input required type="email" name="email" placeholder="you@company.com" class="mt-1 w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 px-4 py-2.5 text-sm focus:ring-2 focus:ring-primary-600 outline-none"></div>
+      <button type="submit" class="w-full rounded-lg bg-primary-600 text-white font-semibold py-2.5 hover:bg-primary-700 transition-colors">Find Deposit Amount</button>
+    </form>
+    <div id="deposit-result" class="hidden mt-4 rounded-xl border border-primary-200 dark:border-primary-800 bg-primary-50 dark:bg-primary-900/20 p-5"></div>
+    <p class="text-xs text-slate-400 mt-3">Note: deposit lookup by Project ID requires your finance team to have recorded the project as an invoice — contact us if yours isn't found.</p>
+  </section>
+
+  <!-- OPTION 3: Custom payment (also the shared payment form target) -->
+  <section id="panel-custom" class="option-panel hidden mt-6">
+    <div class="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-5">
+      <p class="text-sm text-slate-500 dark:text-slate-400">Enter the details for a one-off payment — a subscription fee, milestone, or anything not tied to an existing invoice.</p>
+    </div>
+  </section>
+
+  <!-- SHARED PAYMENT FORM (revealed once an invoice/deposit is confirmed, or immediately for custom) -->
+  <section id="payment-form-section" class="hidden mt-6">
+    <h2 class="font-display font-semibold text-lg text-secondary dark:text-white mb-3">Payment details</h2>
+    <form id="payment-form" class="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-5 space-y-4">
+      <div class="grid sm:grid-cols-2 gap-4">
+        <div><label class="text-sm font-medium">Full name</label>
+          <input required name="fullName" class="mt-1 w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 px-4 py-2.5 text-sm focus:ring-2 focus:ring-primary-600 outline-none"></div>
+        <div><label class="text-sm font-medium">Email address</label>
+          <input required type="email" name="email" class="mt-1 w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 px-4 py-2.5 text-sm focus:ring-2 focus:ring-primary-600 outline-none"></div>
+      </div>
+      <div class="grid sm:grid-cols-2 gap-4">
+        <div><label class="text-sm font-medium">Mobile number</label>
+          <input required name="phone" placeholder="024 000 0000" class="mt-1 w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 px-4 py-2.5 text-sm focus:ring-2 focus:ring-primary-600 outline-none"></div>
+        <div><label class="text-sm font-medium">Network provider</label>
+          <select name="paymentMethod" id="payment-method-select" class="mt-1 w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 px-4 py-2.5 text-sm focus:ring-2 focus:ring-primary-600 outline-none">
+            <option value="mtn_momo">MTN Mobile Money</option>
+            <option value="telecel_cash">Telecel Cash</option>
+            <option value="airteltigo_money">AirtelTigo Money</option>
+            <option value="visa">Visa (card)</option>
+            <option value="mastercard">Mastercard (card)</option>
+          </select>
+        </div>
+      </div>
+      <div id="custom-fields" class="grid sm:grid-cols-2 gap-4">
+        <div><label class="text-sm font-medium">Payment purpose</label>
+          <input name="purpose" placeholder="e.g. Milestone 2 payment" class="mt-1 w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 px-4 py-2.5 text-sm focus:ring-2 focus:ring-primary-600 outline-none"></div>
+        <div><label class="text-sm font-medium">Amount (GHS)</label>
+          <input required type="number" min="1" step="0.01" name="amount" id="amount-input" class="mt-1 w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 px-4 py-2.5 text-sm focus:ring-2 focus:ring-primary-600 outline-none"></div>
+      </div>
+      <button type="submit" id="pay-submit-btn" class="w-full rounded-lg bg-primary-600 text-white font-semibold py-3 hover:bg-primary-700 transition-colors">Pay Now</button>
+      <p class="text-xs text-slate-400 text-center">You'll receive a prompt on your phone (Mobile Money) or a secure card page to complete payment.</p>
+    </form>
+  </section>
+
+  <!-- STATUS PANEL -->
+  <section id="status-section" class="hidden mt-6">
+    <div class="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-6 text-center">
+      <div id="status-icon" class="text-4xl mb-3">⏳</div>
+      <h2 id="status-title" class="font-display font-semibold text-lg text-secondary dark:text-white">Waiting for confirmation…</h2>
+      <p id="status-sub" class="text-sm text-slate-500 dark:text-slate-400 mt-1">Approve the prompt sent to your phone to complete this payment.</p>
+      <div id="status-spinner" class="mt-4 mx-auto h-8 w-8 rounded-full border-2 border-primary-200 border-t-primary-600 animate-spin-slow"></div>
+      <a id="status-receipt-link" href="#" class="hidden mt-4 inline-block rounded-lg bg-primary-600 text-white text-sm font-semibold px-5 py-2.5 hover:bg-primary-700 transition-colors">View Receipt</a>
+    </div>
+  </section>
+</main>
+
+<script type="module">
+  import { supabase } from './js/supabase.js';
+  import { initTheme, toggleTheme, toast, formatMoney } from './js/ui.js';
+  import { lookupInvoice } from './js/invoices.js';
+  import { initiatePayment, pollPaymentStatus } from './js/payments.js';
+
+  initTheme();
+  document.getElementById('theme-toggle').addEventListener('click', toggleTheme);
+
+  // ------------------------------------------------------------ Option tabs
+  let selectedInvoice = null; // { id, invoice_number, balance, currency, ... }
+  let selectedPurposeLabel = 'Custom Payment';
+
+  document.querySelectorAll('.option-tab').forEach(btn => btn.addEventListener('click', () => {
+    document.querySelectorAll('.option-tab').forEach(b => { b.classList.remove('border-primary-600', 'text-primary-600'); b.classList.add('border-transparent', 'text-slate-500'); });
+    btn.classList.add('border-primary-600', 'text-primary-600'); btn.classList.remove('border-transparent', 'text-slate-500');
+    document.querySelectorAll('.option-panel').forEach(p => p.classList.add('hidden'));
+    document.getElementById(`panel-${btn.dataset.option}`).classList.remove('hidden');
+    document.getElementById('payment-form-section').classList.add('hidden');
+    document.getElementById('status-section').classList.add('hidden');
+    selectedInvoice = null;
+
+    if (btn.dataset.option === 'custom') {
+      document.getElementById('custom-fields').querySelector('#amount-input').readOnly = false;
+      document.getElementById('payment-form-section').classList.remove('hidden');
+    }
+  }));
+
+  // Deep-link support: pay.html#invoice / #deposit / #custom
+  const hashOption = location.hash.replace('#', '');
+  if (['invoice', 'deposit', 'custom'].includes(hashOption)) {
+    document.querySelector(`.option-tab[data-option="${hashOption}"]`)?.click();
+  }
+
+  // Pre-fill from query string (?invoice=X&email=Y) — used by dashboard "Pay" links
+  const qp = new URLSearchParams(location.search);
+  if (qp.get('invoice')) {
+    document.querySelector('#invoice-lookup-form [name="invoiceNumber"]').value = qp.get('invoice');
+    if (qp.get('email')) document.querySelector('#invoice-lookup-form [name="email"]').value = qp.get('email');
+  }
+
+  // -------------------------------------------------------- Invoice lookup
+  document.getElementById('invoice-lookup-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const fd = new FormData(e.target);
+    try {
+      const invoice = await lookupInvoice(fd.get('invoiceNumber'), fd.get('email'));
+      selectedInvoice = invoice;
+      selectedPurposeLabel = `Invoice ${invoice.invoice_number}`;
+      const resultEl = document.getElementById('invoice-result');
+      resultEl.classList.remove('hidden');
+      resultEl.innerHTML = `
+        <div class="flex justify-between items-start">
+          <div>
+            <p class="font-semibold text-secondary dark:text-white">${invoice.project_name || invoice.invoice_number}</p>
+            <p class="text-sm text-slate-500 dark:text-slate-400">${invoice.client_name}</p>
+          </div>
+          <span class="text-xs px-2 py-1 rounded-full bg-white dark:bg-slate-800 font-medium">${invoice.status.replace('_',' ')}</span>
+        </div>
+        <div class="grid grid-cols-2 gap-3 mt-4 text-sm">
+          <div><p class="text-slate-400 text-xs">Balance due</p><p class="font-semibold">${formatMoney(invoice.balance, invoice.currency)}</p></div>
+          <div><p class="text-slate-400 text-xs">Due date</p><p class="font-semibold">${invoice.due_date ? new Date(invoice.due_date).toLocaleDateString() : '—'}</p></div>
+        </div>`;
+      preparePaymentForm({ amount: Number(invoice.balance), purpose: selectedPurposeLabel, locked: true });
+      toast('Invoice found — confirm your payment below.', 'success');
+    } catch (err) {
+      toast(err.message || 'Invoice not found.', 'error');
+    }
+  });
+
+  // -------------------------------------------------------- Deposit lookup
+  document.getElementById('deposit-lookup-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const fd = new FormData(e.target);
+    // Deposits are modeled as invoices with project_id set — reuse the same RPC pattern via invoice_number = projectId lookup convention.
+    try {
+      const invoice = await lookupInvoice(fd.get('projectId'), fd.get('email'));
+      selectedInvoice = invoice;
+      selectedPurposeLabel = `Project Deposit — ${invoice.project_name || fd.get('projectId')}`;
+      const resultEl = document.getElementById('deposit-result');
+      resultEl.classList.remove('hidden');
+      resultEl.innerHTML = `
+        <p class="font-semibold text-secondary dark:text-white">${invoice.project_name || 'Project'}</p>
+        <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">Required deposit</p>
+        <p class="text-2xl font-display font-bold text-primary-700 mt-1">${formatMoney(invoice.balance, invoice.currency)}</p>`;
+      preparePaymentForm({ amount: Number(invoice.balance), purpose: selectedPurposeLabel, locked: true });
+      toast('Deposit found — confirm your payment below.', 'success');
+    } catch (err) {
+      toast(err.message || 'No deposit record found for that Project ID.', 'error');
+    }
+  });
+
+  function preparePaymentForm({ amount, purpose, locked }) {
+    const section = document.getElementById('payment-form-section');
+    section.classList.remove('hidden');
+    const amountInput = document.getElementById('amount-input');
+    amountInput.value = amount;
+    amountInput.readOnly = !!locked;
+    document.querySelector('#payment-form [name="purpose"]').value = purpose;
+    document.querySelector('#payment-form [name="purpose"]').readOnly = !!locked;
+    section.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+
+  // ----------------------------------------------------------- Submit pay
+  document.getElementById('payment-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const submitBtn = document.getElementById('pay-submit-btn');
+    submitBtn.disabled = true; submitBtn.textContent = 'Starting payment…';
+
+    try {
+      const fd = new FormData(e.target);
+      const result = await initiatePayment({
+        invoiceId: selectedInvoice?.id ?? null,
+        purpose: fd.get('purpose') || selectedPurposeLabel,
+        fullName: fd.get('fullName'),
+        email: fd.get('email'),
+        phone: fd.get('phone'),
+        amount: Number(fd.get('amount')),
+        currency: 'GHS',
+        paymentMethod: fd.get('paymentMethod'),
+      });
+
+      document.getElementById('payment-form-section').classList.add('hidden');
+      showStatus(result.clientReference);
+    } catch (err) {
+      toast(err.message || 'Could not start payment. Please try again.', 'error');
+    } finally {
+      submitBtn.disabled = false; submitBtn.textContent = 'Pay Now';
+    }
+  });
+
+  function showStatus(clientReference) {
+    const section = document.getElementById('status-section');
+    section.classList.remove('hidden');
+    section.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+    const stopPolling = pollPaymentStatus(clientReference, {
+      onUpdate: (status, payment) => {
+        const icon = document.getElementById('status-icon');
+        const title = document.getElementById('status-title');
+        const sub = document.getElementById('status-sub');
+        const spinner = document.getElementById('status-spinner');
+        const receiptLink = document.getElementById('status-receipt-link');
+
+        if (status === 'successful') {
+          icon.textContent = '✅'; title.textContent = 'Payment successful';
+          sub.textContent = `${formatMoney(payment.amount, payment.currency)} received. A receipt has been generated.`;
+          spinner.classList.add('hidden');
+          receiptLink.href = `receipt.html?ref=${clientReference}`;
+          receiptLink.classList.remove('hidden');
+        } else if (status === 'failed') {
+          icon.textContent = '❌'; title.textContent = 'Payment failed';
+          sub.textContent = 'The transaction did not go through. You can try again.';
+          spinner.classList.add('hidden');
+        } else if (status === 'cancelled') {
+          icon.textContent = '⚪'; title.textContent = 'Payment cancelled';
+          sub.textContent = 'You cancelled this transaction.';
+          spinner.classList.add('hidden');
+        } else {
+          icon.textContent = '⏳'; title.textContent = 'Waiting for confirmation…';
+          sub.textContent = 'Approve the prompt sent to your phone to complete this payment.';
+        }
+      },
+    });
+
+    window.addEventListener('beforeunload', stopPolling, { once: true });
+  }
+</script>
+</body>
+</html>

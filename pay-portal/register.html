@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Create Account — Pay TechDream Africa</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = { darkMode: 'class', theme: { extend: {
+    colors: { primary: { DEFAULT:'#0F766E',600:'#0F766E',700:'#0B5C56' }, secondary:'#1E293B', accent:'#2563EB' },
+    fontFamily: { display: ['Sora','sans-serif'], body: ['Inter','sans-serif'] },
+  }}};
+</script>
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body class="font-body bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-200 min-h-screen">
+
+<div class="min-h-screen flex items-center justify-center px-5 py-12">
+  <div class="w-full max-w-md animate-fade-in-up">
+    <a href="index.html" class="flex items-center justify-center gap-2 font-display font-bold text-lg text-secondary dark:text-white mb-8">
+      <span class="h-8 w-8 rounded-lg bg-primary-600 flex items-center justify-center text-white text-sm">TD</span>
+      Pay<span class="text-primary-600">.TechDreamAfrica</span>
+    </a>
+
+    <div class="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm p-8">
+      <h1 class="font-display font-bold text-2xl text-secondary dark:text-white">Create your account</h1>
+      <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">Track invoices, payments, and receipts in one place.</p>
+
+      <form id="register-form" class="mt-6 space-y-4">
+        <div><label class="text-sm font-medium text-slate-600 dark:text-slate-300">Full name</label>
+          <input required name="fullname" placeholder="Ama Owusu" class="mt-1 w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 px-4 py-2.5 text-sm focus:ring-2 focus:ring-primary-600 outline-none"></div>
+        <div><label class="text-sm font-medium text-slate-600 dark:text-slate-300">Email address</label>
+          <input required type="email" name="email" placeholder="you@company.com" class="mt-1 w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 px-4 py-2.5 text-sm focus:ring-2 focus:ring-primary-600 outline-none"></div>
+        <div><label class="text-sm font-medium text-slate-600 dark:text-slate-300">Mobile number</label>
+          <input required name="phone" placeholder="024 000 0000" class="mt-1 w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 px-4 py-2.5 text-sm focus:ring-2 focus:ring-primary-600 outline-none"></div>
+        <div class="grid grid-cols-2 gap-3">
+          <div><label class="text-sm font-medium text-slate-600 dark:text-slate-300">Password</label>
+            <input required type="password" name="password" minlength="8" placeholder="Min. 8 characters" class="mt-1 w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 px-4 py-2.5 text-sm focus:ring-2 focus:ring-primary-600 outline-none"></div>
+          <div><label class="text-sm font-medium text-slate-600 dark:text-slate-300">Confirm</label>
+            <input required type="password" name="confirm_password" placeholder="Repeat password" class="mt-1 w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 px-4 py-2.5 text-sm focus:ring-2 focus:ring-primary-600 outline-none"></div>
+        </div>
+        <label class="flex items-start gap-2 text-sm text-slate-600 dark:text-slate-300">
+          <input required type="checkbox" class="mt-0.5 rounded border-slate-300 text-primary-600 focus:ring-primary-600"> I agree to the Terms of Service and Privacy Policy
+        </label>
+        <button type="submit" class="w-full rounded-lg bg-primary-600 text-white font-semibold py-3 hover:bg-primary-700 transition-colors">Create Account</button>
+      </form>
+
+      <p class="text-sm text-center text-slate-500 dark:text-slate-400 mt-6">
+        Already have an account? <a href="login.html" class="text-primary-600 font-medium hover:underline">Sign in</a>
+      </p>
+    </div>
+  </div>
+</div>
+
+<script type="module">
+  import { wireRegisterForm } from './js/auth.js';
+  import { initTheme } from './js/ui.js';
+  initTheme();
+  wireRegisterForm(document.getElementById('register-form'));
+</script>
+</body>
+</html>

@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>View Invoice — Pay TechDream Africa</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = { darkMode: 'class', theme: { extend: {
+    colors: { primary: { DEFAULT:'#0F766E',50:'#EBF7F5',600:'#0F766E',700:'#0B5C56' }, secondary:'#1E293B', accent:'#2563EB' },
+    fontFamily: { display: ['Sora','sans-serif'], body: ['Inter','sans-serif'] },
+  }}};
+</script>
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body class="font-body bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-200">
+
+<header class="h-16 bg-white dark:bg-slate-950 border-b border-slate-100 dark:border-slate-800 flex items-center px-5 lg:px-8 sticky top-0 z-20">
+  <a href="index.html" class="flex items-center gap-2 font-display font-bold text-secondary dark:text-white">
+    <span class="h-8 w-8 rounded-lg bg-primary-600 flex items-center justify-center text-white text-sm">TD</span>
+    Pay<span class="text-primary-600">.TechDreamAfrica</span>
+  </a>
+  <button id="theme-toggle" class="ml-auto h-9 w-9 rounded-full border border-slate-200 dark:border-slate-700 flex items-center justify-center">🌓</button>
+</header>
+
+<main class="max-w-xl mx-auto px-5 py-10">
+  <h1 class="font-display font-bold text-3xl text-secondary dark:text-white">View an Invoice</h1>
+  <p class="text-slate-500 dark:text-slate-400 mt-1">Enter your invoice number and the email it was sent to.</p>
+
+  <form id="lookup-form" class="mt-6 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-5 space-y-3">
+    <div><label class="text-sm font-medium">Invoice number</label>
+      <input required name="invoiceNumber" placeholder="e.g. TDA-INV-0123" class="mt-1 w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 px-4 py-2.5 text-sm focus:ring-2 focus:ring-primary-600 outline-none"></div>
+    <div><label class="text-sm font-medium">Email</label>
+      <input required type="email" name="email" placeholder="you@company.com" class="mt-1 w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 px-4 py-2.5 text-sm focus:ring-2 focus:ring-primary-600 outline-none"></div>
+    <button type="submit" class="w-full rounded-lg bg-primary-600 text-white font-semibold py-2.5 hover:bg-primary-700 transition-colors">View Invoice</button>
+  </form>
+
+  <div id="invoice-card" class="hidden mt-6 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-6">
+    <div class="flex items-start justify-between">
+      <div>
+        <p class="text-xs text-slate-400">Invoice</p>
+        <h2 id="inv-number" class="font-display font-bold text-xl text-secondary dark:text-white"></h2>
+      </div>
+      <span id="inv-status" class="text-xs px-2.5 py-1 rounded-full font-medium"></span>
+    </div>
+    <div class="grid grid-cols-2 gap-4 mt-5 text-sm">
+      <div><p class="text-slate-400 text-xs">Client</p><p id="inv-client" class="font-medium"></p></div>
+      <div><p class="text-slate-400 text-xs">Project</p><p id="inv-project" class="font-medium"></p></div>
+      <div><p class="text-slate-400 text-xs">Total amount</p><p id="inv-amount" class="font-medium"></p></div>
+      <div><p class="text-slate-400 text-xs">Balance due</p><p id="inv-balance" class="font-semibold text-primary-700"></p></div>
+      <div><p class="text-slate-400 text-xs">Due date</p><p id="inv-due" class="font-medium"></p></div>
+    </div>
+    <a id="pay-link" href="#" class="mt-6 inline-block w-full text-center rounded-lg bg-primary-600 text-white font-semibold py-3 hover:bg-primary-700 transition-colors">Pay This Invoice</a>
+  </div>
+</main>
+
+<script type="module">
+  import { lookupInvoice } from './js/invoices.js';
+  import { initTheme, toggleTheme, toast, formatMoney } from './js/ui.js';
+  initTheme();
+  document.getElementById('theme-toggle').addEventListener('click', toggleTheme);
+
+  const STATUS_COLORS = { unpaid: 'bg-slate-100 text-slate-600', partially_paid: 'bg-amber-100 text-amber-700', paid: 'bg-emerald-100 text-emerald-700', overdue: 'bg-red-100 text-red-700', cancelled: 'bg-slate-100 text-slate-400' };
+
+  document.getElementById('lookup-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const fd = new FormData(e.target);
+    try {
+      const inv = await lookupInvoice(fd.get('invoiceNumber'), fd.get('email'));
+      document.getElementById('invoice-card').classList.remove('hidden');
+      document.getElementById('inv-number').textContent = inv.invoice_number;
+      document.getElementById('inv-status').textContent = inv.status.replace('_', ' ');
+      document.getElementById('inv-status').className = `text-xs px-2.5 py-1 rounded-full font-medium ${STATUS_COLORS[inv.status] || STATUS_COLORS.unpaid}`;
+      document.getElementById('inv-client').textContent = inv.client_name;
+      document.getElementById('inv-project').textContent = inv.project_name || '—';
+      document.getElementById('inv-amount').textContent = formatMoney(inv.amount, inv.currency);
+      document.getElementById('inv-balance').textContent = formatMoney(inv.balance, inv.currency);
+      document.getElementById('inv-due').textContent = inv.due_date ? new Date(inv.due_date).toLocaleDateString() : '—';
+      const payLink = document.getElementById('pay-link');
+      if (inv.status === 'paid' || inv.status === 'cancelled') {
+        payLink.textContent = inv.status === 'paid' ? 'Already Paid' : 'Cancelled';
+        payLink.classList.add('pointer-events-none', 'opacity-50');
+      } else {
+        payLink.href = `pay.html#invoice?invoice=${encodeURIComponent(inv.invoice_number)}&email=${encodeURIComponent(fd.get('email'))}`;
+        payLink.href = `pay.html?invoice=${encodeURIComponent(inv.invoice_number)}&email=${encodeURIComponent(fd.get('email'))}#invoice`;
+      }
+    } catch (err) {
+      toast(err.message || 'Invoice not found.', 'error');
+    }
+  });
+</script>
+</body>
+</html>

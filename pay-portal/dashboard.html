@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard — Pay TechDream Africa</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = { darkMode: 'class', theme: { extend: {
+    colors: { primary: { DEFAULT:'#0F766E',50:'#EBF7F5',600:'#0F766E',700:'#0B5C56' }, secondary:'#1E293B', accent:'#2563EB' },
+    fontFamily: { display: ['Sora','sans-serif'], body: ['Inter','sans-serif'] },
+  }}};
+</script>
+<link rel="stylesheet" href="assets/css/style.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+</head>
+<body class="font-body bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-200">
+
+<div id="sidebar-overlay" class="fixed inset-0 bg-black/40 z-30 hidden lg:hidden"></div>
+
+<aside id="sidebar" class="fixed lg:sticky top-0 z-40 h-screen w-64 bg-secondary text-slate-300 -translate-x-full lg:translate-x-0 transition-transform duration-200 flex flex-col">
+  <a href="index.html" class="flex items-center gap-2 font-display font-bold text-white px-5 h-16 border-b border-white/10 shrink-0">
+    <span class="h-8 w-8 rounded-lg bg-primary-600 flex items-center justify-center text-sm">TD</span>
+    Pay<span class="text-primary-500">.TDA</span>
+  </a>
+  <nav id="sidebar-nav" class="flex-1 overflow-y-auto px-3 py-4 space-y-1 text-sm"></nav>
+  <div class="p-3 border-t border-white/10">
+    <button id="logout-btn" class="w-full flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-white/5 text-sm transition-colors">🚪 Logout</button>
+  </div>
+</aside>
+
+<div class="lg:pl-64">
+  <header class="sticky top-0 z-20 h-16 bg-white/95 dark:bg-slate-950/95 backdrop-blur border-b border-slate-200 dark:border-slate-800 flex items-center justify-between px-4 lg:px-8">
+    <div class="flex items-center gap-3">
+      <button id="sidebar-toggle" class="lg:hidden h-9 w-9 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center justify-center">☰</button>
+      <div>
+        <p id="welcome-title" class="font-display font-semibold text-secondary dark:text-white">Welcome back</p>
+        <p id="welcome-sub" class="text-xs text-slate-400"></p>
+      </div>
+    </div>
+    <div class="flex items-center gap-2">
+      <button id="theme-toggle" class="h-9 w-9 rounded-full border border-slate-200 dark:border-slate-700 flex items-center justify-center hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors">🌓</button>
+      <a href="profile.html" id="avatar-link" class="h-9 w-9 rounded-full bg-primary-600 text-white flex items-center justify-center text-sm font-semibold">–</a>
+    </div>
+  </header>
+
+  <main class="p-4 lg:p-8 max-w-7xl mx-auto">
+    <!-- CLIENT VIEW -->
+    <section id="view-client" class="hidden space-y-6">
+      <div class="flex flex-wrap items-center justify-between gap-3">
+        <h1 class="font-display font-bold text-2xl text-secondary dark:text-white">Your payments</h1>
+        <a href="pay.html" class="rounded-lg bg-primary-600 text-white text-sm font-medium px-4 py-2.5 hover:bg-primary-700 transition-colors">+ Make a Payment</a>
+      </div>
+      <div id="client-stats" class="grid grid-cols-2 lg:grid-cols-4 gap-4"></div>
+      <div class="grid lg:grid-cols-2 gap-6">
+        <div>
+          <h2 class="font-display font-semibold text-secondary dark:text-white mb-3">Outstanding invoices</h2>
+          <div id="client-invoices" class="space-y-3"></div>
+        </div>
+        <div>
+          <h2 class="font-display font-semibold text-secondary dark:text-white mb-3">Recent transactions</h2>
+          <div id="client-payments" class="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-4"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FINANCE/ADMIN VIEW -->
+    <section id="view-finance" class="hidden space-y-6">
+      <h1 class="font-display font-bold text-2xl text-secondary dark:text-white">Revenue dashboard</h1>
+      <div id="finance-stats" class="grid grid-cols-2 lg:grid-cols-5 gap-4"></div>
+      <div class="grid lg:grid-cols-3 gap-6">
+        <div class="lg:col-span-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-5">
+          <h3 class="font-display font-semibold text-secondary dark:text-white mb-3">Revenue by month</h3>
+          <canvas id="chart-revenue" height="220"></canvas>
+        </div>
+        <div class="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-5">
+          <h3 class="font-display font-semibold text-secondary dark:text-white mb-3">Payment methods</h3>
+          <canvas id="chart-methods" height="220"></canvas>
+        </div>
+      </div>
+      <div class="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 overflow-x-auto">
+        <div class="flex items-center justify-between px-4 py-3 border-b border-slate-100 dark:border-slate-800">
+          <h3 class="font-display font-semibold text-secondary dark:text-white">Recent transactions</h3>
+          <input id="txn-search" placeholder="Search by name…" class="text-sm rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-1.5 focus:ring-2 focus:ring-primary-600 outline-none">
+        </div>
+        <table class="w-full text-left">
+          <thead class="text-xs uppercase text-slate-400 border-b border-slate-100 dark:border-slate-800">
+            <tr><th class="py-3 px-4">Payer</th><th class="py-3 px-4">Amount</th><th class="py-3 px-4">Invoice</th><th class="py-3 px-4">Status</th><th class="py-3 px-4">Date</th></tr>
+          </thead>
+          <tbody id="finance-table-body"></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+</div>
+
+<script type="module">
+  import { supabase, requireAuth, getCurrentProfile } from './js/supabase.js';
+  import { initTheme, toggleTheme, initSidebar, initials } from './js/ui.js';
+  import { logoutUser } from './js/auth.js';
+  import { renderClientDashboard, renderFinanceDashboard } from './js/dashboard.js';
+
+  initTheme(); initSidebar();
+  document.getElementById('theme-toggle').addEventListener('click', toggleTheme);
+  document.getElementById('logout-btn').addEventListener('click', logoutUser);
+
+  const NAV = {
+    client: [['dashboard.html','🏠','Overview'], ['pay.html','💳','Make a Payment'], ['invoice.html','🧾','View Invoice'], ['profile.html','👤','Profile']],
+    staff: [['dashboard.html','🏠','Revenue Dashboard'], ['dashboard.html#invoices','🧾','Invoices'], ['dashboard.html#transactions','💳','Transactions'], ['profile.html','👤','Profile']],
+  };
+
+  (async () => {
+    const session = await requireAuth();
+    if (!session) return;
+    const profile = await getCurrentProfile();
+    if (!profile) return;
+
+    document.getElementById('welcome-title').textContent = `Welcome back, ${profile.fullname?.split(' ')[0] || 'there'} 👋`;
+    document.getElementById('welcome-sub').textContent = profile.role.replace('_', ' ').replace(/\b\w/g, c => c.toUpperCase());
+    document.getElementById('avatar-link').textContent = initials(profile.fullname);
+
+    const isStaff = profile.role === 'finance' || profile.role === 'admin';
+    document.getElementById('sidebar-nav').innerHTML = (isStaff ? NAV.staff : NAV.client).map(([href, icon, label]) => `
+      <a href="${href}" class="flex items-center gap-2.5 px-3 py-2.5 rounded-lg hover:bg-white/5 transition-colors"><span>${icon}</span><span>${label}</span></a>`).join('');
+
+    if (!isStaff) {
+      document.getElementById('view-client').classList.remove('hidden');
+      await renderClientDashboard({
+        statsRow: document.getElementById('client-stats'),
+        invoicesList: document.getElementById('client-invoices'),
+        paymentsList: document.getElementById('client-payments'),
+      });
+    } else {
+      document.getElementById('view-finance').classList.remove('hidden');
+      const payments = await renderFinanceDashboard({
+        statsRow: document.getElementById('finance-stats'),
+        tableBody: document.getElementById('finance-table-body'),
+      });
+      renderCharts(payments);
+
+      document.getElementById('txn-search').addEventListener('input', (e) => {
+        const q = e.target.value.toLowerCase();
+        document.querySelectorAll('#finance-table-body tr').forEach(row => {
+          row.style.display = row.textContent.toLowerCase().includes(q) ? '' : 'none';
+        });
+      });
+    }
+  })();
+
+  function renderCharts(payments) {
+    const successful = payments.filter(p => p.status === 'successful');
+
+    const months = Array.from({ length: 6 }).map((_, i) => { const d = new Date(); d.setMonth(d.getMonth() - (5 - i)); return d; });
+    const revenueByMonth = months.map(d => successful.filter(p => {
+      const pd = new Date(p.created_at); return pd.getMonth() === d.getMonth() && pd.getFullYear() === d.getFullYear();
+    }).reduce((s, p) => s + Number(p.amount), 0));
+
+    new Chart(document.getElementById('chart-revenue'), {
+      type: 'bar',
+      data: { labels: months.map(d => d.toLocaleString('default', { month: 'short' })), datasets: [{ data: revenueByMonth, backgroundColor: '#0F766E', borderRadius: 4 }] },
+      options: { plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } },
+    });
+
+    const byMethod = {};
+    successful.forEach(p => byMethod[p.payment_method] = (byMethod[p.payment_method] || 0) + 1);
+    new Chart(document.getElementById('chart-methods'), {
+      type: 'doughnut',
+      data: { labels: Object.keys(byMethod), datasets: [{ data: Object.values(byMethod), backgroundColor: ['#0F766E','#2563EB','#F59E0B','#1E293B','#94A3B8'] }] },
+      options: { plugins: { legend: { position: 'bottom', labels: { boxWidth: 10, font: { size: 10 } } } } },
+    });
+  }
+</script>
+</body>
+</html>

@@ -1,0 +1,14 @@
+<!-- Reference sidebar markup for authenticated pages — see dashboard.html / profile.html.
+     #sidebar-nav is populated at runtime by dashboard.html's inline script based on
+     the signed-in user's role (client vs finance/admin — see js/dashboard.js). -->
+<div id="sidebar-overlay" class="fixed inset-0 bg-black/40 z-30 hidden lg:hidden"></div>
+<aside id="sidebar" class="fixed lg:sticky top-0 z-40 h-screen w-64 bg-secondary text-slate-300 -translate-x-full lg:translate-x-0 transition-transform duration-200 flex flex-col">
+  <a href="index.html" class="flex items-center gap-2 font-display font-bold text-white px-5 h-16 border-b border-white/10 shrink-0">
+    <span class="h-8 w-8 rounded-lg bg-primary-600 flex items-center justify-center text-sm">TD</span>
+    Pay<span class="text-primary-500">.TDA</span>
+  </a>
+  <nav id="sidebar-nav" class="flex-1 overflow-y-auto px-3 py-4 space-y-1 text-sm"></nav>
+  <div class="p-3 border-t border-white/10">
+    <button id="logout-btn" class="w-full flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-white/5 text-sm transition-colors">🚪 Logout</button>
+  </div>
+</aside>
