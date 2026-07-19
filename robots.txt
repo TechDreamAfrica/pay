@@ -1,9 +1,0 @@
-﻿User-agent: *
-Allow: /
-Disallow: /js/firebase-config.js
-
-User-agent: Googlebot
-Allow: /
-Crawl-delay: 1
-
-Sitemap: https://techdreamafrica.org/sitemap.xml
